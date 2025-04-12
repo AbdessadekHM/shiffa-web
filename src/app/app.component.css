@@ -1,0 +1,11 @@
+html {
+  scroll-behavior: smooth;
+  -webkit-scroll-behavior: smooth;
+  -moz-scroll-behavior: smooth;
+  -ms-scroll-behavior: smooth;
+}
+
+/* Add some padding to account for fixed header */
+section {
+  scroll-margin-top: 4rem;
+}
