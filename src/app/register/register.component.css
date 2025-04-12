@@ -1,0 +1,45 @@
+/* Form Input Focus Effects */
+input:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Radio Button Focus Effect */
+input[type="radio"]:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Button Hover Effect */
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Form Container Animation */
+.max-w-md {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Word Counter Animation */
+.text-xs {
+  transition: color 0.3s ease;
+}
+
+.text-xs.text-neutral-500 {
+  color: #6B7280;
+}
+
+.text-xs.text-red-500 {
+  color: #EF4444;
+} 

@@ -1,0 +1,24 @@
+/* Newsletter Form Focus Effect */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Social Media Icons Hover Effect */
+a:hover svg {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+/* Footer Links Hover Effect */
+a:hover {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+/* Newsletter Button Hover Effect */
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+} 
