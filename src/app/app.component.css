@@ -9,3 +9,18 @@ html {
 section {
   scroll-margin-top: 4rem;
 }
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* Ensure smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

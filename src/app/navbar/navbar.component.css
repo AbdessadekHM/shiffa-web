@@ -20,3 +20,26 @@
   background: linear-gradient(90deg, transparent, var(--color-brand-400), transparent);
   opacity: 0.5;
 }
+
+/* Theme Switcher Animation */
+button svg {
+  transition: transform 0.3s ease;
+}
+
+button:hover svg {
+  transform: scale(1.1);
+}
+
+/* Dark Mode Transitions */
+.dark {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar Shadow in Dark Mode */
+nav {
+  transition: box-shadow 0.3s ease;
+}
+
+nav.dark {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
