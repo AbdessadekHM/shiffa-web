@@ -3,6 +3,7 @@ import { createClient, Session, SupabaseClient, User } from '@supabase/supabase-
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { FileMetadata } from '../models';
 
 
 
@@ -138,4 +139,86 @@ import { Router } from '@angular/router';
         }
       }
     }
+
+    //to get the profile for the current user
+    async getProfile(userId: string): Promise<{ data: Profile | null; error: string | null }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      if (error) throw new Error(error.message);
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as string };
+    }
+  }
+
+    //files handling, man it's 22:28PM and I am tired
+    
+
+    async uploadFile(
+    file: File,
+    type: 'report' | 'prescription' | 'certificate' | 'image' | 'other',
+    description?: string
+  ): Promise<{ data: FileMetadata | null; error: string | null }> {
+    try {
+      const user = this.getCurrentUser();
+      if (!user) throw new Error('No authenticated user');
+
+      const { data: profile, error: profileError } = await this.getProfile(user.id);
+      if (profileError || !profile) throw new Error('Profile not found');
+
+      // Organize file path by role
+      const rolePath = profile.type === 'doctor' ? 'doctor' : 'patient';
+      const filePath = `${rolePath}/${user.id}/${Date.now()}_${file.name}`;
+
+      // Upload file to Supabase Storage
+      const { data: uploadData, error: uploadError } = await this.supabase.storage
+        .from('medical-files')
+        .upload(filePath, file);
+      
+      if (uploadError) throw new Error(uploadError.message);
+
+      // Get public URL (or signed URL for private buckets)
+      const { data: urlData } = this.supabase.storage
+        .from('medical-files')
+        .getPublicUrl(filePath);
+      
+      if (!urlData) throw new Error('Failed to get file URL');
+
+      // Insert metadata into files table
+      const { data: fileData, error: insertError } = await this.supabase
+        .from('files')
+        .insert([{ user_id: user.id, file_url: urlData.publicUrl, type, description }])
+        .select()
+        .single();
+      
+      if (insertError) throw new Error(insertError.message);
+
+      return { data: fileData, error: null };
+    } catch (error) {
+      return { data: null, error: error as string };
+    }
+  }
+
+  async getUserFiles(): Promise<{ data: FileMetadata[] | null; error: string | null }> {
+    try {
+      const user = this.getCurrentUser();
+      if (!user) throw new Error('No authenticated user');
+
+      const { data, error } = await this.supabase
+        .from('files')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw new Error(error.message);
+      
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as string };
+    }
+  }
    }

@@ -6,4 +6,5 @@ interface Profile {
   lastname?: string;
   phone?: string;
   created_at: string;
+  type:string;
 }
