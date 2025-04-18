@@ -1,0 +1,24 @@
+<button
+  class="group relative flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border-2 border-dashed border-neutral-300 hover:border-brand-500 hover:-translate-y-1 w-full aspect-square"
+  (click)="onCardClick()"
+>
+  <input
+    *ngIf="acceptFileType"
+    #fileInput
+    type="file"
+    [accept]="acceptFileType"
+    class="hidden"
+    (change)="onFileSelected($event)"
+  />
+  <svg
+    class="w-10 h-10 text-neutral-400 group-hover:text-brand-500 transition-colors duration-200"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    [innerHTML]="iconPath"
+  >
+  </svg>
+  <span class="mt-2 text-sm font-medium text-neutral-600 group-hover:text-brand-500 transition-colors duration-200">
+    {{ title }}
+  </span>
+</button> 
