@@ -12,6 +12,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
      private supabase: SupabaseClient;
      sessionSubject = new BehaviorSubject<Session | null>(null);
      session$: Observable<Session | null> = this.sessionSubject.asObservable();
+     private loadingSubject = new BehaviorSubject<boolean>(true);
+     loading$ = this.loadingSubject.asObservable();
 
      constructor() {
        this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
@@ -25,9 +27,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
      }
 
      private async loadSession() {
+        this.loadingSubject.next(true);
         const { data: { session } } = await this.supabase.auth.getSession();
         this.sessionSubject.next(session);
+        this.loadingSubject.next(false);
      }
+
      getSupabase(): SupabaseClient {
        return this.supabase;
      }
@@ -70,12 +75,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
      }
 
      async createProfile(userId: string, email: string, username: string, firstName:string, lastName:string, phone?: string) {
+      console.log(userId)
        return await this.supabase
          .from('profiles')
          .insert([{ id: userId, email, username, firstname:firstName, lastname: lastName, phone }]);
      }
 
-     async updateProfile(userId: string, updates: { username?: string; full_name?: string; phone?: string }) {
+     async updateProfile(userId: string, updates: { username?: string; firstname:string, lastname:string; phone?: string }) {
        return await this.supabase
          .from('profiles')
          .update(updates)

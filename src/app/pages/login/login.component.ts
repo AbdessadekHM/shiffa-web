@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+
 import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    
     private supabaseService: SupabaseService,
     private router: Router
   ) {
@@ -30,58 +30,83 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
+    console.log("login")
     // Check if user is already authenticated
-    this.authService.getCurrentUser().subscribe(user => {
-      if (user) {
-        this.router.navigate(['/register']);
-      }
-    });
+    
   }
 
   ngOnInit(): void {
     // Check URL parameters for auth callback
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      this.handleAuthCallback();
+    //const urlParams = new URLSearchParams(window.location.search);
+    //const code = urlParams.get('code');
+    //if (code) {
+      //this.handleAuthCallback();
+    //}
+    
+    const user = this.supabaseService.getCurrentUser();
+    if(user){
+      this.router.navigate(["/register"]);
+      console.log("user's name", Object.keys(user));
     }
+    
+    
+
+    //this.authService.getCurrentUser().subscribe(user => {
+////      console.log(user)
+      //if (user) {
+        
+        //this.router.navigate(['/register']);
+      //}
+      
+    //});
   }
 
-  private async handleAuthCallback() {
-    try {
-      this.isLoading = true;
-      const session = await this.authService.getSession();
-      if (session) {
-        this.router.navigate(['/register']);
-      }
-    } catch (error) {
-      console.error('Authentication error:', error);
-      // Handle error appropriately
-    } finally {
-      this.isLoading = false;
-    }
-  }
+  //private async handleAuthCallback() {
+    //try {
+      //this.isLoading = true;
+      //const session = await this.authService.getSession();
+      //if (session) {
+        //this.router.navigate(['/register']);
+      //}
+    //} catch (error) {
+      //console.error('Authentication error:', error);
+      //// Handle error appropriately
+    //} finally {
+      //this.isLoading = false;
+    //}
+  //}
   
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      console.log('Form submitted:', this.loginForm.value);
-      this.signInWithEmail();
-      // Add your login logic here
-    }
-  }
-    async signInWithGoogle() {
-       const { error } = await this.supabaseService.signInWithGoogle();
-       if (error) {
-         this.error = error.message;
-         
-       }
-     }
+    //if (this.loginForm.valid) {
+      //console.log('Form submitted:', this.loginForm.value);
+      //this.signInWithEmail();
 
-     async signInWithEmail() {
-       const { error } = await this.supabaseService.signInWithEmail(this.loginForm.value.email,this.loginForm.value.password);
-       if (error) {
-         this.error = error.message;
+
+    //}
+    const user = this.supabaseService.getCurrentUser();
+    console.log(user)
+  }
+  async signInWithGoogle() {
+      const { error } = await this.supabaseService.signInWithGoogle();
+      
+      if (error) {
+        console.log("something went wrong")
+      
+        this.error = error.message;
+        this.router.navigate(['/login']);
          
-       }
-     }
+      }
+      
+
+
+    }
+
+    async signInWithEmail() {
+      const { error } = await this.supabaseService.signInWithEmail(this.loginForm.value.email,this.loginForm.value.password);
+      if (error) {
+      console.log("something went wrong")
+        this.error = error.message;
+         
+      }
+    }
 }
