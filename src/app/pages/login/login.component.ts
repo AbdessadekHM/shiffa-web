@@ -79,14 +79,14 @@ export class LoginComponent implements OnInit {
   //}
   
   onSubmit(): void {
-    //if (this.loginForm.valid) {
-      //console.log('Form submitted:', this.loginForm.value);
-      //this.signInWithEmail();
+    if (this.loginForm.valid) {
+      console.log('Form submitted:', this.loginForm.value);
+      this.signInWithEmail();
 
+      this.router.navigate(['/dashboard']);
 
-    //}
-    const user = this.supabaseService.getCurrentUser();
-    console.log(user)
+    }
+    
   }
   async signInWithGoogle() {
 

@@ -25,7 +25,7 @@ export class AuthComponent implements OnInit {
       if(session){
         this.subapabaseService.hasProfile(session.user.id).then((hasProfile) => {
           if(hasProfile){
-            this.router.navigate(['/']);
+            this.router.navigate(['/dashboard']);
           }else{
             this.router.navigate(['/register']);
           }

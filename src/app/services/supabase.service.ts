@@ -132,7 +132,7 @@ import { Router } from '@angular/router';
         const isProfileExist = await this.hasProfile(user.id);
         if(isProfileExist){
           console.log("user has profile")
-          this.router.navigate(['']);
+          this.router.navigate(['/dashboard']);
         }else{
           this.router.navigate(['/register']);
         }
