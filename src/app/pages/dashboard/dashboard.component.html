@@ -41,6 +41,13 @@
         >
           Accesses
         </button>
+        <button
+          (click)="toggleTab('qr')"
+          [class]="activeTab === 'qr' ? 'border-brand-500 text-brand-600 dark:text-brand-400 dark:border-brand-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          QR Code
+        </button>
       </nav>
     </div>
 
@@ -59,21 +66,34 @@
           <app-pdf-card 
             *ngFor="let pdf of pdfs"
             [title]="pdf.title"
-            
           ></app-pdf-card>
         }
-        <!--
-            [description]="pdf.description"
-            [thumbnailUrl]="pdf.thumbnailUrl"
-        -->
       </div>
 
       <!-- Accesses Tab -->
       <div *ngIf="activeTab === 'accesses'" class="bg-white dark:bg-gray-800 shadow rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Access Management</h3>
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Access Management</h3>
+            <button
+              (click)="openCreateAccessForm()"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+            >
+              Create Access
+            </button>
+          </div>
           <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
             <p>Manage who has access to your resources.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- QR Code Tab -->
+      <div *ngIf="activeTab === 'qr'" class="bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">QR Code Generator</h3>
+          <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
+            <p>Generate QR codes for your resources.</p>
           </div>
         </div>
       </div>

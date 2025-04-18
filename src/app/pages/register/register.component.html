@@ -117,6 +117,19 @@
         </div>
 
         <!-- Doctor Description (Conditional) -->
+
+        <div *ngIf="registerForm.get('userType')?.value === 'doctor'" class="space-y-2">
+          <label for="specialization" class="block text-sm font-medium text-neutral-700">Specialization</label>
+          <input 
+            id="specialization" 
+            name="specialization" 
+            type="text" 
+            formControlName="specialization"
+            class="mt-1 block w-full px-3 py-2 border border-neutral-300 rounded-lg shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500"
+            placeholder="Enter your specialization"
+          >
+        </div>
+        
         <div *ngIf="registerForm.get('userType')?.value === 'doctor'" class="space-y-2">
           <label for="description" class="block text-sm font-medium text-neutral-700">Professional Description</label>
           <textarea 

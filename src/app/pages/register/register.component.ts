@@ -31,6 +31,7 @@ export class RegisterComponent implements OnInit {
       verifyPassword: ['', [Validators.required]],
       userType: ['user', [Validators.required]],
       phone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)]],
+      specialization: [''],
       description: ['']
     }, { validator: this.passwordMatchValidator });
   }
@@ -104,7 +105,11 @@ export class RegisterComponent implements OnInit {
         this.registerForm.value.username,
         this.registerForm.value.firstName,
         this.registerForm.value.lastName,
-        this.registerForm.value.phone
+        this.registerForm.value.userType,
+        this.registerForm.value.phone,
+        this.registerForm.value.specialization,
+        this.registerForm.value.description
+
       ).then(({ data, error }) => {
         if (error) {
           console.error('Error creating profile:', error);

@@ -20,12 +20,13 @@ interface Pdf {
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  activeTab: 'resources' | 'accesses' = 'resources';
+  activeTab: 'resources' | 'accesses' | 'qr' = 'resources';
   showAssistant = false;
   showPdfUploadForm = false;
+  showCreateAccessForm = false;
   pdfs: Pdf[] = []; // This will be populated with actual PDFs from your service
 
-  toggleTab(tab: 'resources' | 'accesses') {
+  toggleTab(tab: 'resources' | 'accesses' | 'qr') {
     this.activeTab = tab;
   }
 
@@ -48,5 +49,13 @@ export class DashboardComponent {
 
   closePdfUploadForm() {
     this.showPdfUploadForm = false;
+  }
+
+  openCreateAccessForm() {
+    this.showCreateAccessForm = true;
+  }
+
+  closeCreateAccessForm() {
+    this.showCreateAccessForm = false;
   }
 }

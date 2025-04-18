@@ -98,14 +98,14 @@ import { Router } from '@angular/router';
          .single();
      }
 
-     async createProfile(userId: string, email: string, username: string, firstName:string, lastName:string, phone?: string) {
+     async createProfile(userId: string, email: string, username: string, firstName:string, lastName:string, type: string, phone?: string, specialization?:string, description?:string) {
       console.log(userId)
        return await this.supabase
          .from('profiles')
-         .insert([{ id: userId, email, username, firstname:firstName, lastname: lastName, phone }]);
+         .insert([{ id: userId, email, username, firstname:firstName, lastname: lastName, phone, specialization, description, role: type }]);
      }
 
-     async updateProfile(userId: string, updates: { username?: string; firstname:string, lastname:string; phone?: string }) {
+     async updateProfile(userId: string, updates: { username?: string; firstname:string, lastname:string; phone?: string, specialization?:string, description?:string }) {
        return await this.supabase
          .from('profiles')
          .update(updates)
