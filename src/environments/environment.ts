@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
-  supabaseUrl: 'YOUR_SUPABASE_URL',
-  supabaseKey: 'YOUR_SUPABASE_ANON_KEY'
+  supabaseUrl:"https://otgzbvvnupdabblegzfg.supabase.co",
+  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90Z3pidnZudXBkYWJibGVnemZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTk4NjEsImV4cCI6MjA2MDM3NTg2MX0.mSoOByE0efQ0bAYWFElQJyzynk5DaHaELIWW5kSwlPc"
 }; 
+
