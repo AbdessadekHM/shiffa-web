@@ -37,7 +37,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     
-//    while(!this.supabaseService.loading$);
+    while(!this.supabaseService.loading$);
     this.user = this.supabaseService.getCurrentUser();
     
       

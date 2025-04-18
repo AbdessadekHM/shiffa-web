@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, Session, SupabaseClient, User } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 
@@ -15,10 +16,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
      private loadingSubject = new BehaviorSubject<boolean>(true);
      loading$ = this.loadingSubject.asObservable();
 
-     constructor() {
+     constructor(
+      private router: Router
+     ) {
        this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
        this.supabase.auth.onAuthStateChange((event, session) => {
-          console.log('Auth state changed:', event, session);
+        
           this.sessionSubject.next(session);
         });
         this.loadSession();
@@ -39,13 +42,34 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
      async signInWithGoogle() {
       
+      
+      
        return await this.supabase.auth.signInWithOAuth({
          provider: 'google',
          options: {
-           redirectTo: window.location.origin + '/register',
+           redirectTo: window.location.origin + '/auth',
          },
        });
 
+      }
+      async hasProfile(userId: string): Promise<boolean> {
+        try {
+          this.loadingSubject.next(true);
+
+          const { data, error } = await this.supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', userId)
+            .single();
+          if (error && error.code === 'PGRST116') return false; // No rows found
+          if (error) throw new Error(error.message);
+          console.log(data)
+          this.loadingSubject.next(false);
+          return !!data;
+        } catch (error) {
+          console.error('Check profile error:', error);
+          return false;
+        }
       }
 
      async signInWithEmail(emailOrUsername: string, password: string) {
@@ -89,6 +113,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
      }
 
      async signOut() {
+      console.log("signing out")
     return await this.supabase.auth.signOut();
     }
 
@@ -98,5 +123,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
     getCurrentUser(): User | null {
       return this.sessionSubject.value?.user || null;
+    }
+    async AuthenticationRedirect(){
+      while(!this.loading$);
+      const user = this.getCurrentUser();
+      if(user){
+
+        const isProfileExist = await this.hasProfile(user.id);
+        if(isProfileExist){
+          console.log("user has profile")
+          this.router.navigate(['']);
+        }else{
+          this.router.navigate(['/register']);
+        }
+      }
     }
    }

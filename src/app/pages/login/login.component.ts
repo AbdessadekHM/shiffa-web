@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-
 import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
@@ -43,11 +42,14 @@ export class LoginComponent implements OnInit {
       //this.handleAuthCallback();
     //}
     
-    const user = this.supabaseService.getCurrentUser();
-    if(user){
-      this.router.navigate(["/register"]);
-      console.log("user's name", Object.keys(user));
-    }
+    //const user = this.supabaseService.getCurrentUser();
+    //if(user){
+      //this.router.navigate(["/register"]);
+      //console.log("user's name", Object.keys(user));
+    //}
+    
+    
+    this.supabaseService.AuthenticationRedirect()
     
     
 
@@ -87,6 +89,7 @@ export class LoginComponent implements OnInit {
     console.log(user)
   }
   async signInWithGoogle() {
+
       const { error } = await this.supabaseService.signInWithGoogle();
       
       if (error) {
@@ -96,6 +99,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/login']);
          
       }
+      
       
 
 
