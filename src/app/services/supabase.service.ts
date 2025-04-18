@@ -1,29 +1,47 @@
 import { Injectable } from '@angular/core';
-   import { createClient, SupabaseClient } from '@supabase/supabase-js';
-   import { environment } from '../../environments/environment';
+import { createClient, Session, SupabaseClient, User } from '@supabase/supabase-js';
+import { environment } from '../../environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+
 
    @Injectable({
      providedIn: 'root',
    })
    export class SupabaseService {
      private supabase: SupabaseClient;
+     sessionSubject = new BehaviorSubject<Session | null>(null);
+     session$: Observable<Session | null> = this.sessionSubject.asObservable();
 
      constructor() {
        this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+       this.supabase.auth.onAuthStateChange((event, session) => {
+          console.log('Auth state changed:', event, session);
+          this.sessionSubject.next(session);
+        });
+        this.loadSession();
+
+
      }
 
+     private async loadSession() {
+        const { data: { session } } = await this.supabase.auth.getSession();
+        this.sessionSubject.next(session);
+     }
      getSupabase(): SupabaseClient {
        return this.supabase;
      }
 
      async signInWithGoogle() {
+      
        return await this.supabase.auth.signInWithOAuth({
          provider: 'google',
          options: {
            redirectTo: window.location.origin + '/register',
          },
        });
-     }
+
+      }
 
      async signInWithEmail(emailOrUsername: string, password: string) {
        let email = emailOrUsername;
@@ -51,10 +69,10 @@ import { Injectable } from '@angular/core';
          .single();
      }
 
-     async createProfile(userId: string, email: string, username: string, fullName?: string, phone?: string) {
+     async createProfile(userId: string, email: string, username: string, firstName:string, lastName:string, phone?: string) {
        return await this.supabase
          .from('profiles')
-         .insert([{ id: userId, email, username, full_name: fullName, phone }]);
+         .insert([{ id: userId, email, username, firstname:firstName, lastname: lastName, phone }]);
      }
 
      async updateProfile(userId: string, updates: { username?: string; full_name?: string; phone?: string }) {
@@ -63,4 +81,16 @@ import { Injectable } from '@angular/core';
          .update(updates)
          .eq('id', userId);
      }
+
+     async signOut() {
+    return await this.supabase.auth.signOut();
+    }
+
+    getCurrentSession(): Session | null {
+      return this.sessionSubject.value;
+    }
+
+    getCurrentUser(): User | null {
+      return this.sessionSubject.value?.user || null;
+    }
    }
