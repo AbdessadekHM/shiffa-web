@@ -54,6 +54,7 @@
     <!-- Content -->
     <div class="mt-8">
       <!-- Resources Tab -->
+      
       <div *ngIf="activeTab === 'resources'" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <!-- Add PDF Card -->
         <app-pdf-card
@@ -62,10 +63,10 @@
         ></app-pdf-card>
 
         <!-- PDF Cards -->
-         @if(pdfs.length > 0) {
+         @if(pdfs!==null && pdfs.length > 0) {
           <app-pdf-card 
             *ngFor="let pdf of pdfs"
-            [title]="pdf.title"
+            [title]="pdf.name"
           ></app-pdf-card>
         }
       </div>

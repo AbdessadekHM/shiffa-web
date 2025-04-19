@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { FileMetadata } from '../models';
+import { Profile } from '../models/Profile';
+
 
 
 
@@ -168,18 +170,27 @@ import { FileMetadata } from '../models';
       if (!user) throw new Error('No authenticated user');
 
       const { data: profile, error: profileError } = await this.getProfile(user.id);
+      
       if (profileError || !profile) throw new Error('Profile not found');
 
+      if(!file) throw new Error('No file provided');
       // Organize file path by role
       const rolePath = profile.type === 'doctor' ? 'doctor' : 'patient';
       const filePath = `${rolePath}/${user.id}/${Date.now()}_${file.name}`;
 
+      console.log("file path is "+ filePath)
+      console.log(file)
+      if(file.name==undefined) throw new Error('File name is undefined');
       // Upload file to Supabase Storage
       const { data: uploadData, error: uploadError } = await this.supabase.storage
         .from('medical-files')
         .upload(filePath, file);
+
+
+
       
       if (uploadError) throw new Error(uploadError.message);
+      console.log("LUCKY LUCKY")
 
       // Get public URL (or signed URL for private buckets)
       const { data: urlData } = this.supabase.storage
@@ -187,11 +198,12 @@ import { FileMetadata } from '../models';
         .getPublicUrl(filePath);
       
       if (!urlData) throw new Error('Failed to get file URL');
+      console.log("LUCKY LUCKY 2")
 
       // Insert metadata into files table
       const { data: fileData, error: insertError } = await this.supabase
         .from('files')
-        .insert([{ user_id: user.id, file_url: urlData.publicUrl, type, description }])
+        .insert([{ user_id: user.id, file_url: urlData.publicUrl, description, name: file.name }])
         .select()
         .single();
       
@@ -199,13 +211,14 @@ import { FileMetadata } from '../models';
 
       return { data: fileData, error: null };
     } catch (error) {
+      console.log("oops")
       return { data: null, error: error as string };
     }
   }
 
   async getUserFiles(): Promise<{ data: FileMetadata[] | null; error: string | null }> {
     try {
-      const user = this.getCurrentUser();
+      const user = this.getCurrentSession()?.user;
       if (!user) throw new Error('No authenticated user');
 
       const { data, error } = await this.supabase

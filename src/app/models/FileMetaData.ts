@@ -1,5 +1,6 @@
 export interface FileMetadata {
   id: string;
+  name: string;
   user_id: string;
   file_url: string;
   description?: string;
